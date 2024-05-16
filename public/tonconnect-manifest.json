@@ -1,7 +1,7 @@
 {
-  "url": "http://localhost:3000",
-  "name": "LocalHost",
-  "iconUrl": "http://localhost:3000/favicon.ico",
+  "url": "https://tapnee-v0.vercel.app",
+  "name": "Tapnee v0",
+  "iconUrl": "https://tapnee-v0.vercel.app/favicon.ico",
   "termsOfUseUrl": "<terms-of-use-url>",
   "privacyPolicyUrl": "<privacy-policy-url>"
 }
