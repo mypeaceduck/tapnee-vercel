@@ -21,7 +21,7 @@ async function setup() {
         id SERIAL PRIMARY KEY,
         tgId INTEGER DEFAULT 0,
         tonWallet TEXT DEFAULT '',
-        createdAt INTEGER DEFAULT 0
+        createdAt BIGINT DEFAULT 0
       );
     `);
 
@@ -32,7 +32,7 @@ async function setup() {
         name TEXT DEFAULT '',
         areas INTEGER DEFAULT 0,
         metadata TEXT DEFAULT '',
-        createdAt INTEGER DEFAULT 0
+        createdAt BIGINT DEFAULT 0
       );
     `);
 
@@ -42,7 +42,7 @@ async function setup() {
         gameId INTEGER DEFAULT 0,
         userId INTEGER DEFAULT 0,
         areaId INTEGER DEFAULT 0,
-        createdAt INTEGER DEFAULT 0
+        createdAt BIGINT DEFAULT 0
       );
     `);
 
@@ -52,7 +52,7 @@ async function setup() {
         gameId INTEGER DEFAULT 0,
         userId INTEGER DEFAULT 0,
         improvement INTEGER DEFAULT 0,
-        createdAt INTEGER DEFAULT 0
+        createdAt BIGINT DEFAULT 0
       );
     `);
 
@@ -61,7 +61,7 @@ async function setup() {
         id SERIAL PRIMARY KEY,
         userId INTEGER DEFAULT 0,
         address TEXT DEFAULT '',
-        createdAt INTEGER DEFAULT 0
+        createdAt BIGINT DEFAULT 0
       );
     `);
 
