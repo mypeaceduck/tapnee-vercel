@@ -1,21 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Client } from "pg";
+import pg from "pg";
+
+const { Pool } = pg;
 
 const THROTTLE_TIME = 200;
 const MIN = 60_000;
 const MAX_PER_MIN = 30;
 
-const client = new Client({
+const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 });
 
-async function connectClient() {
-  await client.connect();
-}
-
-connectClient().catch(console.error);
-
 export async function GET(request: NextRequest) {
+  const client = await pool.connect();
   const { searchParams } = new URL(request.url);
   const gameId = searchParams.get("gameId");
   let userId = searchParams.get("userId");
@@ -102,10 +99,13 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error:", error);
     return NextResponse.json({ error: "Error fetching data" }, { status: 500 });
+  } finally {
+    client.release();
   }
 }
 
 export async function POST(request: NextRequest) {
+  const client = await pool.connect();
   try {
     const timestamp = new Date().getTime();
     const data = await request.json();
@@ -193,5 +193,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error:", error);
     return NextResponse.json({ error: "Error updating data" }, { status: 500 });
+  } finally {
+    client.release();
   }
 }

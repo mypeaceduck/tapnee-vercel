@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "node src/lib/tapnee-dev.js && next dev",
-    "build": "next build",
-    "start": "node src/lib/tapnee.js && next start",
+    "build": "node src/lib/tapnee.js && next build",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
