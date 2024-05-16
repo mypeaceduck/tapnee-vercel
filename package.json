@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "node src/lib/init-db.js && next dev",
+    "dev": "node src/lib/tapnee-dev.js && next dev",
     "build": "next build",
-    "start": "node src/lib/init-db.js && next start",
+    "start": "node src/lib/tapnee.js && next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "eruda": "^3.0.1",
     "fireworks-js": "^2.10.7",
     "next": "14.2.3",
+    "pg": "^8.11.5",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/pg": "^8.11.6",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/sqlite3": "^3.1.11",

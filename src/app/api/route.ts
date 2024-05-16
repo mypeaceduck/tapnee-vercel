@@ -1,19 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import { join } from "path";
-import { open } from "sqlite";
-import sqlite3 from "sqlite3";
+import { Client } from "pg";
 
-const dbPath = join(process.cwd(), "./tapnee.db");
 const THROTTLE_TIME = 200;
 const MIN = 60_000;
 const MAX_PER_MIN = 30;
 
-export async function GET(request: NextRequest) {
-  const db = await open({
-    filename: dbPath,
-    driver: sqlite3.Database,
-  });
+const client = new Client({
+  user: process.env.POSTGRES_USER,
+  host: process.env.POSTGRES_HOST,
+  database: process.env.POSTGRES_DATABASE,
+  password: process.env.POSTGRES_PASSWORD,
+});
 
+async function connectClient() {
+  await client.connect();
+}
+
+connectClient().catch(console.error);
+
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const gameId = searchParams.get("gameId");
   let userId = searchParams.get("userId");
@@ -22,68 +27,76 @@ export async function GET(request: NextRequest) {
 
   try {
     if (!gameId) {
-      const games = await db.all(`SELECT * FROM games`);
-      return NextResponse.json(games, { status: 200 });
+      const gamesResult = await client.query(`SELECT * FROM games`);
+      return NextResponse.json(gamesResult.rows, { status: 200 });
     }
 
     if (!userId) {
-      const user = await db.get(
-        `SELECT userId FROM addresses WHERE address = ?`,
+      const userResult = await client.query(
+        `SELECT userId FROM addresses WHERE address = $1`,
         [address]
       );
-      if (user) {
-        userId = user.userId;
+      if (userResult.rows.length > 0) {
+        userId = userResult.rows[0].userid;
       } else {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
     }
 
-    const areaResult = await db.get(`SELECT areas FROM games WHERE id = ?`, [
-      gameId,
-    ]);
+    const areaResult = await client.query(
+      `SELECT areas FROM games WHERE id = $1`,
+      [gameId]
+    );
 
-    if (!areaResult) {
+    if (areaResult.rows.length === 0) {
       return NextResponse.json({ error: "Game not found" }, { status: 404 });
     }
 
-    const improvements = await db.all(
-      `SELECT improvement FROM improvements WHERE gameId = ? AND userId = ? AND createdAt + 86400000 < ?`,
+    const improvementsResult = await client.query(
+      `SELECT improvement FROM improvements WHERE gameId = $1 AND userId = $2 AND createdAt + 86400000 < $3`,
       [gameId, userId, timestamp]
     );
-    const imp = improvements
-      ? improvements.map((i) => Number(i.improvement))
-      : [0];
+    const imp =
+      improvementsResult.rows.length > 0
+        ? improvementsResult.rows.map((i) => Number(i.improvement))
+        : [0];
 
-    const timeAreas = Array.from({ length: areaResult.areas }, (_, i) =>
-      db.get(
-        `SELECT COUNT(*) AS slaps, MIN(createdAt) AS waitFrom FROM taps WHERE gameId = ? AND userId = ? AND areaId = ? AND createdAt > ?`,
-        [gameId, userId, i + 1, timestamp - MIN]
-      )
+    const timeAreasPromises = Array.from(
+      { length: areaResult.rows[0].areas },
+      (_, i) =>
+        client.query(
+          `SELECT COUNT(*) AS slaps, MIN(createdAt) AS waitFrom FROM taps WHERE gameId = $1 AND userId = $2 AND areaId = $3 AND createdAt > $4`,
+          [gameId, userId, i + 1, timestamp - MIN]
+        )
     );
-    const timeSlaps = await Promise.all(timeAreas);
+    const timeSlapsResults = await Promise.all(timeAreasPromises);
 
-    const allAreas = Array.from({ length: areaResult.areas }, (_, i) =>
-      db.get(
-        `SELECT COUNT(*) AS slaps FROM taps WHERE gameId = ? AND userId = ? AND areaId = ?`,
-        [gameId, userId, i + 1]
-      )
+    const allAreasPromises = Array.from(
+      { length: areaResult.rows[0].areas },
+      (_, i) =>
+        client.query(
+          `SELECT COUNT(*) AS slaps FROM taps WHERE gameId = $1 AND userId = $2 AND areaId = $3`,
+          [gameId, userId, i + 1]
+        )
     );
-    const allSlaps = await Promise.all(allAreas);
+    const allSlapsResults = await Promise.all(allAreasPromises);
 
     return NextResponse.json(
       {
-        stats: allSlaps.map((s) => ({
-          count: Number(s.slaps),
+        stats: allSlapsResults.map((s) => ({
+          count: Number(s.rows[0].slaps),
         })),
-        session: timeSlaps.map((s) => ({
-          count: Number(s.slaps),
+        session: timeSlapsResults.map((s) => ({
+          count: Number(s.rows[0].slaps),
           max: MAX_PER_MIN,
           percent: Math.round(
-            ((Number(s.slaps) > MAX_PER_MIN ? MAX_PER_MIN : Number(s.slaps)) /
+            ((Number(s.rows[0].slaps) > MAX_PER_MIN
+              ? MAX_PER_MIN
+              : Number(s.rows[0].slaps)) /
               MAX_PER_MIN) *
               100
           ),
-          waitFrom: Number(s.waitFrom),
+          waitFrom: Number(s.rows[0].waitfrom),
         })),
         improvement: imp,
       },
@@ -92,17 +105,10 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error:", error);
     return NextResponse.json({ error: "Error fetching data" }, { status: 500 });
-  } finally {
-    await db.close();
   }
 }
 
 export async function POST(request: NextRequest) {
-  const db = await open({
-    filename: dbPath,
-    driver: sqlite3.Database,
-  });
-
   try {
     const timestamp = new Date().getTime();
     const data = await request.json();
@@ -110,18 +116,18 @@ export async function POST(request: NextRequest) {
     let userId = data.userId;
 
     if (auth) {
-      const exists = await db.get(
-        `SELECT id FROM addresses WHERE address = ?`,
+      const existsResult = await client.query(
+        `SELECT id FROM addresses WHERE address = $1`,
         [auth]
       );
-      if (!exists) {
-        const id = await db.run(
-          `INSERT INTO users (tgId, createdAt) VALUES (?, ?)`,
+      if (existsResult.rows.length === 0) {
+        const userResult = await client.query(
+          `INSERT INTO users (tgId, createdAt) VALUES ($1, $2) RETURNING id`,
           [1, timestamp]
         );
-        await db.run(
-          `INSERT INTO addresses (userId, address, createdAt) VALUES (?, ?, ?)`,
-          [id.lastID, auth, timestamp]
+        await client.query(
+          `INSERT INTO addresses (userId, address, createdAt) VALUES ($1, $2, $3)`,
+          [userResult.rows[0].id, auth, timestamp]
         );
       }
 
@@ -129,56 +135,60 @@ export async function POST(request: NextRequest) {
     }
 
     if (!userId) {
-      const user = await db.get(
-        `SELECT userId FROM addresses WHERE address = ?`,
+      const userResult = await client.query(
+        `SELECT userId FROM addresses WHERE address = $1`,
         [address]
       );
-      console.log(user, address);
-      if (user) {
-        userId = user.userId;
+      if (userResult.rows.length > 0) {
+        userId = userResult.rows[0].userid;
       } else {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
     }
 
-    const lastEntry = await db.get(
-      `SELECT MAX(createdAt) as lastTimestamp FROM taps WHERE gameId = ? AND userId = ? AND areaId = ?`,
+    const lastEntryResult = await client.query(
+      `SELECT MAX(createdAt) as lastTimestamp FROM taps WHERE gameId = $1 AND userId = $2 AND areaId = $3`,
       [gameId, userId, areaId]
     );
 
-    if (lastEntry && timestamp - lastEntry.lastTimestamp < THROTTLE_TIME) {
+    if (
+      lastEntryResult.rows.length > 0 &&
+      timestamp - lastEntryResult.rows[0].lasttimestamp < THROTTLE_TIME
+    ) {
       return NextResponse.json({ error: "Click too soon" }, { status: 429 });
     }
 
-    const improvements = await db.all(
-      `SELECT improvement FROM improvements WHERE gameId = ? AND userId = ? AND createdAt + 86400000 < ?`,
+    const improvementsResult = await client.query(
+      `SELECT improvement FROM improvements WHERE gameId = $1 AND userId = $2 AND createdAt + 86400000 < $3`,
       [gameId, userId, timestamp]
     );
-    const imp = improvements
-      ? improvements.map((i) => Number(i.improvement))
-      : [0];
+    const imp =
+      improvementsResult.rows.length > 0
+        ? improvementsResult.rows.map((i) => Number(i.improvement))
+        : [0];
 
-    const countSlaps = await db.get(
-      `SELECT COUNT(*) as countSlaps FROM taps WHERE gameId = ? AND userId = ? AND areaId = ? AND createdAt > ?`,
+    const countSlapsResult = await client.query(
+      `SELECT COUNT(*) as countSlaps FROM taps WHERE gameId = $1 AND userId = $2 AND areaId = $3 AND createdAt > $4`,
       [gameId, userId, areaId, timestamp - MIN]
     );
 
     if (
-      countSlaps &&
-      countSlaps.countSlaps > (imp.includes(2) ? MAX_PER_MIN * 10 : MAX_PER_MIN)
+      countSlapsResult.rows.length > 0 &&
+      countSlapsResult.rows[0].countslaps >
+        (imp.includes(2) ? MAX_PER_MIN * 10 : MAX_PER_MIN)
     ) {
       return NextResponse.json({ error: "Click limit" }, { status: 429 });
     }
 
     if (imp.includes(1)) {
-      await db.run(
-        `INSERT INTO taps (gameId, userId, areaId, createdAt) VALUES (?, ?, ?, ?)`,
+      await client.query(
+        `INSERT INTO taps (gameId, userId, areaId, createdAt) VALUES ($1, $2, $3, $4)`,
         [gameId, userId, areaId, timestamp]
       );
     }
 
-    await db.run(
-      `INSERT INTO taps (gameId, userId, areaId, createdAt) VALUES (?, ?, ?, ?)`,
+    await client.query(
+      `INSERT INTO taps (gameId, userId, areaId, createdAt) VALUES ($1, $2, $3, $4)`,
       [gameId, userId, areaId, timestamp]
     );
 
@@ -186,7 +196,5 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error:", error);
     return NextResponse.json({ error: "Error updating data" }, { status: 500 });
-  } finally {
-    await db.close();
   }
 }
