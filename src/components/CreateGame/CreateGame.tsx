@@ -8,7 +8,7 @@ const CreateGame = () => {
         <div className="w-full">
           <label className="form-control w-full">
             <div className="label">
-              <span className="label-text">Slap Metadata:</span>
+              <span className="label-text">Tapnee Metadata:</span>
               <span className="label-text-alt"></span>
             </div>
             <input
@@ -23,7 +23,7 @@ const CreateGame = () => {
                   href=""
                   className="underline underline-offset-2 decoration-dotted"
                 >
-                  What is Slap Metadata?
+                  What is Tapnee Metadata?
                 </a>
               </span>
             </div>
