@@ -2,10 +2,7 @@ import { Client } from "pg";
 
 async function setup() {
   const client = new Client({
-    user: process.env.POSTGRES_USER,
-    host: process.env.POSTGRES_HOST,
-    database: process.env.POSTGRES_DATABASE,
-    password: process.env.POSTGRES_PASSWORD,
+    connectionString: process.env.POSTGRES_URL,
   });
 
   await client.connect();

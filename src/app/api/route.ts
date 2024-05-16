@@ -6,10 +6,7 @@ const MIN = 60_000;
 const MAX_PER_MIN = 30;
 
 const client = new Client({
-  user: process.env.POSTGRES_USER,
-  host: process.env.POSTGRES_HOST,
-  database: process.env.POSTGRES_DATABASE,
-  password: process.env.POSTGRES_PASSWORD,
+  connectionString: process.env.POSTGRES_URL,
 });
 
 async function connectClient() {
