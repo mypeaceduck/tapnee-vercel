@@ -1,0 +1,693 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+@keyframes animate-slap-element {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-200px, 200px);
+  }
+}
+
+path.animate-slap-element-1,
+path.animate-slap-element-2 {
+  animation: animate-slap-element 0.2s ease;
+}
+
+@keyframes animate-slap-element-red {
+  0%,
+  100% {
+    opacity: inherit;
+    transform: translate(0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-30px, -30px);
+  }
+}
+
+circle.animate-slap-element-1,
+circle.animate-slap-element-2 {
+  animation: animate-slap-element-red 1s ease;
+}
+
+@keyframes scaleFadeOutUp {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(0.5); /* Start from half size */
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100px) scale(1.5); /* Move up and grow */
+  }
+}
+
+.animate-scaleFadeOutUp {
+  animation: scaleFadeOutUp 0.5s ease-out forwards; /* Controls the duration and smoothness */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animation-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+circle.slap-element-1-percent-0 {
+  opacity: 0;
+}
+circle.slap-element-1-percent-0 {
+  opacity: 0;
+}
+circle.slap-element-2-percent-0 {
+  opacity: 0;
+}
+circle.slap-element-1-percent-1 {
+  opacity: 0.01;
+}
+circle.slap-element-2-percent-1 {
+  opacity: 0.01;
+}
+circle.slap-element-1-percent-2 {
+  opacity: 0.02;
+}
+circle.slap-element-2-percent-2 {
+  opacity: 0.02;
+}
+circle.slap-element-1-percent-3 {
+  opacity: 0.03;
+}
+circle.slap-element-2-percent-3 {
+  opacity: 0.03;
+}
+circle.slap-element-1-percent-4 {
+  opacity: 0.04;
+}
+circle.slap-element-2-percent-4 {
+  opacity: 0.04;
+}
+circle.slap-element-1-percent-5 {
+  opacity: 0.05;
+}
+circle.slap-element-2-percent-5 {
+  opacity: 0.05;
+}
+circle.slap-element-1-percent-6 {
+  opacity: 0.06;
+}
+circle.slap-element-2-percent-6 {
+  opacity: 0.06;
+}
+circle.slap-element-1-percent-7 {
+  opacity: 0.07;
+}
+circle.slap-element-2-percent-7 {
+  opacity: 0.07;
+}
+circle.slap-element-1-percent-8 {
+  opacity: 0.08;
+}
+circle.slap-element-2-percent-8 {
+  opacity: 0.08;
+}
+circle.slap-element-1-percent-9 {
+  opacity: 0.09;
+}
+circle.slap-element-2-percent-9 {
+  opacity: 0.09;
+}
+circle.slap-element-1-percent-10 {
+  opacity: 0.1;
+}
+circle.slap-element-2-percent-10 {
+  opacity: 0.1;
+}
+circle.slap-element-1-percent-11 {
+  opacity: 0.11;
+}
+circle.slap-element-2-percent-11 {
+  opacity: 0.11;
+}
+circle.slap-element-1-percent-12 {
+  opacity: 0.12;
+}
+circle.slap-element-2-percent-12 {
+  opacity: 0.12;
+}
+circle.slap-element-1-percent-13 {
+  opacity: 0.13;
+}
+circle.slap-element-2-percent-13 {
+  opacity: 0.13;
+}
+circle.slap-element-1-percent-14 {
+  opacity: 0.14;
+}
+circle.slap-element-2-percent-14 {
+  opacity: 0.14;
+}
+circle.slap-element-1-percent-15 {
+  opacity: 0.15;
+}
+circle.slap-element-2-percent-15 {
+  opacity: 0.15;
+}
+circle.slap-element-1-percent-16 {
+  opacity: 0.16;
+}
+circle.slap-element-2-percent-16 {
+  opacity: 0.16;
+}
+circle.slap-element-1-percent-17 {
+  opacity: 0.17;
+}
+circle.slap-element-2-percent-17 {
+  opacity: 0.17;
+}
+circle.slap-element-1-percent-18 {
+  opacity: 0.18;
+}
+circle.slap-element-2-percent-18 {
+  opacity: 0.18;
+}
+circle.slap-element-1-percent-19 {
+  opacity: 0.19;
+}
+circle.slap-element-2-percent-19 {
+  opacity: 0.19;
+}
+circle.slap-element-1-percent-20 {
+  opacity: 0.2;
+}
+circle.slap-element-2-percent-20 {
+  opacity: 0.2;
+}
+circle.slap-element-1-percent-21 {
+  opacity: 0.21;
+}
+circle.slap-element-2-percent-21 {
+  opacity: 0.21;
+}
+circle.slap-element-1-percent-22 {
+  opacity: 0.22;
+}
+circle.slap-element-2-percent-22 {
+  opacity: 0.22;
+}
+circle.slap-element-1-percent-23 {
+  opacity: 0.23;
+}
+circle.slap-element-2-percent-23 {
+  opacity: 0.23;
+}
+circle.slap-element-1-percent-24 {
+  opacity: 0.24;
+}
+circle.slap-element-2-percent-24 {
+  opacity: 0.24;
+}
+circle.slap-element-1-percent-25 {
+  opacity: 0.25;
+}
+circle.slap-element-2-percent-25 {
+  opacity: 0.25;
+}
+circle.slap-element-1-percent-26 {
+  opacity: 0.26;
+}
+circle.slap-element-2-percent-26 {
+  opacity: 0.26;
+}
+circle.slap-element-1-percent-27 {
+  opacity: 0.27;
+}
+circle.slap-element-2-percent-27 {
+  opacity: 0.27;
+}
+circle.slap-element-1-percent-28 {
+  opacity: 0.28;
+}
+circle.slap-element-2-percent-28 {
+  opacity: 0.28;
+}
+circle.slap-element-1-percent-29 {
+  opacity: 0.29;
+}
+circle.slap-element-2-percent-29 {
+  opacity: 0.29;
+}
+circle.slap-element-1-percent-30 {
+  opacity: 0.3;
+}
+circle.slap-element-2-percent-30 {
+  opacity: 0.3;
+}
+circle.slap-element-1-percent-31 {
+  opacity: 0.31;
+}
+circle.slap-element-2-percent-31 {
+  opacity: 0.31;
+}
+circle.slap-element-1-percent-32 {
+  opacity: 0.32;
+}
+circle.slap-element-2-percent-32 {
+  opacity: 0.32;
+}
+circle.slap-element-1-percent-33 {
+  opacity: 0.33;
+}
+circle.slap-element-2-percent-33 {
+  opacity: 0.33;
+}
+circle.slap-element-1-percent-34 {
+  opacity: 0.34;
+}
+circle.slap-element-2-percent-34 {
+  opacity: 0.34;
+}
+circle.slap-element-1-percent-35 {
+  opacity: 0.35;
+}
+circle.slap-element-2-percent-35 {
+  opacity: 0.35;
+}
+circle.slap-element-1-percent-36 {
+  opacity: 0.36;
+}
+circle.slap-element-2-percent-36 {
+  opacity: 0.36;
+}
+circle.slap-element-1-percent-37 {
+  opacity: 0.37;
+}
+circle.slap-element-2-percent-37 {
+  opacity: 0.37;
+}
+circle.slap-element-1-percent-38 {
+  opacity: 0.38;
+}
+circle.slap-element-2-percent-38 {
+  opacity: 0.38;
+}
+circle.slap-element-1-percent-39 {
+  opacity: 0.39;
+}
+circle.slap-element-2-percent-39 {
+  opacity: 0.39;
+}
+circle.slap-element-1-percent-40 {
+  opacity: 0.4;
+}
+circle.slap-element-2-percent-40 {
+  opacity: 0.4;
+}
+circle.slap-element-1-percent-41 {
+  opacity: 0.41;
+}
+circle.slap-element-2-percent-41 {
+  opacity: 0.41;
+}
+circle.slap-element-1-percent-42 {
+  opacity: 0.42;
+}
+circle.slap-element-2-percent-42 {
+  opacity: 0.42;
+}
+circle.slap-element-1-percent-43 {
+  opacity: 0.43;
+}
+circle.slap-element-2-percent-43 {
+  opacity: 0.43;
+}
+circle.slap-element-1-percent-44 {
+  opacity: 0.44;
+}
+circle.slap-element-2-percent-44 {
+  opacity: 0.44;
+}
+circle.slap-element-1-percent-45 {
+  opacity: 0.45;
+}
+circle.slap-element-2-percent-45 {
+  opacity: 0.45;
+}
+circle.slap-element-1-percent-46 {
+  opacity: 0.46;
+}
+circle.slap-element-2-percent-46 {
+  opacity: 0.46;
+}
+circle.slap-element-1-percent-47 {
+  opacity: 0.47;
+}
+circle.slap-element-2-percent-47 {
+  opacity: 0.47;
+}
+circle.slap-element-1-percent-48 {
+  opacity: 0.48;
+}
+circle.slap-element-2-percent-48 {
+  opacity: 0.48;
+}
+circle.slap-element-1-percent-49 {
+  opacity: 0.49;
+}
+circle.slap-element-2-percent-49 {
+  opacity: 0.49;
+}
+circle.slap-element-1-percent-50 {
+  opacity: 0.5;
+}
+circle.slap-element-2-percent-50 {
+  opacity: 0.5;
+}
+circle.slap-element-1-percent-51 {
+  opacity: 0.51;
+}
+circle.slap-element-2-percent-51 {
+  opacity: 0.51;
+}
+circle.slap-element-1-percent-52 {
+  opacity: 0.52;
+}
+circle.slap-element-2-percent-52 {
+  opacity: 0.52;
+}
+circle.slap-element-1-percent-53 {
+  opacity: 0.53;
+}
+circle.slap-element-2-percent-53 {
+  opacity: 0.53;
+}
+circle.slap-element-1-percent-54 {
+  opacity: 0.54;
+}
+circle.slap-element-2-percent-54 {
+  opacity: 0.54;
+}
+circle.slap-element-1-percent-55 {
+  opacity: 0.55;
+}
+circle.slap-element-2-percent-55 {
+  opacity: 0.55;
+}
+circle.slap-element-1-percent-56 {
+  opacity: 0.56;
+}
+circle.slap-element-2-percent-56 {
+  opacity: 0.56;
+}
+circle.slap-element-1-percent-57 {
+  opacity: 0.57;
+}
+circle.slap-element-2-percent-57 {
+  opacity: 0.57;
+}
+circle.slap-element-1-percent-58 {
+  opacity: 0.58;
+}
+circle.slap-element-2-percent-58 {
+  opacity: 0.58;
+}
+circle.slap-element-1-percent-59 {
+  opacity: 0.59;
+}
+circle.slap-element-2-percent-59 {
+  opacity: 0.59;
+}
+circle.slap-element-1-percent-60 {
+  opacity: 0.6;
+}
+circle.slap-element-2-percent-60 {
+  opacity: 0.6;
+}
+circle.slap-element-1-percent-61 {
+  opacity: 0.61;
+}
+circle.slap-element-2-percent-61 {
+  opacity: 0.61;
+}
+circle.slap-element-1-percent-62 {
+  opacity: 0.62;
+}
+circle.slap-element-2-percent-62 {
+  opacity: 0.62;
+}
+circle.slap-element-1-percent-63 {
+  opacity: 0.63;
+}
+circle.slap-element-2-percent-63 {
+  opacity: 0.63;
+}
+circle.slap-element-1-percent-64 {
+  opacity: 0.64;
+}
+circle.slap-element-2-percent-64 {
+  opacity: 0.64;
+}
+circle.slap-element-1-percent-65 {
+  opacity: 0.65;
+}
+circle.slap-element-2-percent-65 {
+  opacity: 0.65;
+}
+circle.slap-element-1-percent-66 {
+  opacity: 0.66;
+}
+circle.slap-element-2-percent-66 {
+  opacity: 0.66;
+}
+circle.slap-element-1-percent-67 {
+  opacity: 0.67;
+}
+circle.slap-element-2-percent-67 {
+  opacity: 0.67;
+}
+circle.slap-element-1-percent-68 {
+  opacity: 0.68;
+}
+circle.slap-element-2-percent-68 {
+  opacity: 0.68;
+}
+circle.slap-element-1-percent-69 {
+  opacity: 0.69;
+}
+circle.slap-element-2-percent-69 {
+  opacity: 0.69;
+}
+circle.slap-element-1-percent-70 {
+  opacity: 0.7;
+}
+circle.slap-element-2-percent-70 {
+  opacity: 0.7;
+}
+circle.slap-element-1-percent-71 {
+  opacity: 0.71;
+}
+circle.slap-element-2-percent-71 {
+  opacity: 0.71;
+}
+circle.slap-element-1-percent-72 {
+  opacity: 0.72;
+}
+circle.slap-element-2-percent-72 {
+  opacity: 0.72;
+}
+circle.slap-element-1-percent-73 {
+  opacity: 0.73;
+}
+circle.slap-element-2-percent-73 {
+  opacity: 0.73;
+}
+circle.slap-element-1-percent-74 {
+  opacity: 0.74;
+}
+circle.slap-element-2-percent-74 {
+  opacity: 0.74;
+}
+circle.slap-element-1-percent-75 {
+  opacity: 0.75;
+}
+circle.slap-element-2-percent-75 {
+  opacity: 0.75;
+}
+circle.slap-element-1-percent-76 {
+  opacity: 0.76;
+}
+circle.slap-element-2-percent-76 {
+  opacity: 0.76;
+}
+circle.slap-element-1-percent-77 {
+  opacity: 0.77;
+}
+circle.slap-element-2-percent-77 {
+  opacity: 0.77;
+}
+circle.slap-element-1-percent-78 {
+  opacity: 0.78;
+}
+circle.slap-element-2-percent-78 {
+  opacity: 0.78;
+}
+circle.slap-element-1-percent-79 {
+  opacity: 0.79;
+}
+circle.slap-element-2-percent-79 {
+  opacity: 0.79;
+}
+circle.slap-element-1-percent-80 {
+  opacity: 0.8;
+}
+circle.slap-element-2-percent-80 {
+  opacity: 0.8;
+}
+circle.slap-element-1-percent-81 {
+  opacity: 0.81;
+}
+circle.slap-element-2-percent-81 {
+  opacity: 0.81;
+}
+circle.slap-element-1-percent-82 {
+  opacity: 0.82;
+}
+circle.slap-element-2-percent-82 {
+  opacity: 0.82;
+}
+circle.slap-element-1-percent-83 {
+  opacity: 0.83;
+}
+circle.slap-element-2-percent-83 {
+  opacity: 0.83;
+}
+circle.slap-element-1-percent-84 {
+  opacity: 0.84;
+}
+circle.slap-element-2-percent-84 {
+  opacity: 0.84;
+}
+circle.slap-element-1-percent-85 {
+  opacity: 0.85;
+}
+circle.slap-element-2-percent-85 {
+  opacity: 0.85;
+}
+circle.slap-element-1-percent-86 {
+  opacity: 0.86;
+}
+circle.slap-element-2-percent-86 {
+  opacity: 0.86;
+}
+circle.slap-element-1-percent-87 {
+  opacity: 0.87;
+}
+circle.slap-element-2-percent-87 {
+  opacity: 0.87;
+}
+circle.slap-element-1-percent-88 {
+  opacity: 0.88;
+}
+circle.slap-element-2-percent-88 {
+  opacity: 0.88;
+}
+circle.slap-element-1-percent-89 {
+  opacity: 0.89;
+}
+circle.slap-element-2-percent-89 {
+  opacity: 0.89;
+}
+circle.slap-element-1-percent-90 {
+  opacity: 0.9;
+}
+circle.slap-element-2-percent-90 {
+  opacity: 0.9;
+}
+circle.slap-element-1-percent-91 {
+  opacity: 0.91;
+}
+circle.slap-element-2-percent-91 {
+  opacity: 0.91;
+}
+circle.slap-element-1-percent-92 {
+  opacity: 0.92;
+}
+circle.slap-element-2-percent-92 {
+  opacity: 0.92;
+}
+circle.slap-element-1-percent-93 {
+  opacity: 0.93;
+}
+circle.slap-element-2-percent-93 {
+  opacity: 0.93;
+}
+circle.slap-element-1-percent-94 {
+  opacity: 0.94;
+}
+circle.slap-element-2-percent-94 {
+  opacity: 0.94;
+}
+circle.slap-element-1-percent-95 {
+  opacity: 0.95;
+}
+circle.slap-element-2-percent-95 {
+  opacity: 0.95;
+}
+circle.slap-element-1-percent-96 {
+  opacity: 0.96;
+}
+circle.slap-element-2-percent-96 {
+  opacity: 0.96;
+}
+circle.slap-element-1-percent-97 {
+  opacity: 0.97;
+}
+circle.slap-element-2-percent-97 {
+  opacity: 0.97;
+}
+circle.slap-element-1-percent-98 {
+  opacity: 0.98;
+}
+circle.slap-element-2-percent-98 {
+  opacity: 0.98;
+}
+circle.slap-element-1-percent-99 {
+  opacity: 0.99;
+}
+circle.slap-element-2-percent-99 {
+  opacity: 0.99;
+}
+circle.slap-element-1-percent-100 {
+  opacity: 1;
+}
+circle.slap-element-2-percent-100 {
+  opacity: 1;
+}

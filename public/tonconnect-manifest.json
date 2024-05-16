@@ -1,0 +1,7 @@
+{
+  "url": "http://localhost:3000",
+  "name": "LocalHost",
+  "iconUrl": "http://localhost:3000/favicon.ico",
+  "termsOfUseUrl": "<terms-of-use-url>",
+  "privacyPolicyUrl": "<privacy-policy-url>"
+}

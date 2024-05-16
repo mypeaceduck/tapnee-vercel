@@ -1,0 +1,39 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node src/lib/init-db.js && next dev",
+    "build": "next build",
+    "start": "node src/lib/init-db.js && next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tma.js/init-data-node": "^1.2.0",
+    "@tma.js/sdk": "^2.0.0",
+    "@tma.js/sdk-react": "^2.1.0",
+    "@tonconnect/ui-react": "^2.0.2",
+    "eruda": "^3.0.1",
+    "fireworks-js": "^2.10.7",
+    "next": "14.2.3",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-icons": "^5.2.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "swr": "^2.2.5",
+    "tonapi-sdk-js": "^1.0.9"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/sqlite3": "^3.1.11",
+    "daisyui": "^4.11.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
