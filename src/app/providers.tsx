@@ -6,7 +6,7 @@ export default function Provider({ children }: any) {
   const manifestUrl = useMemo(() => {
     return typeof window === "undefined"
       ? ""
-      : new URL("tonconnect-manifest.json", window.location.href).toString();
+      : new URL("/tonconnect-manifest.json", window.location.href).toString();
   }, []);
 
   return (

@@ -37,7 +37,7 @@ export default function Page() {
         <div className="h-screen bg-custom-home relative">
           <div className="grid place-items-center absolute w-full h-screen fill-black/5">
             <div className="w-80">
-              <Logo opacity={0.05} />
+              <Logo opacity={0.01} />
             </div>
           </div>
           <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-28">

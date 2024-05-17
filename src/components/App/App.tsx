@@ -1,17 +1,21 @@
 "use client";
 
-import Airdrop from "@/components/Airdrop";
-import Icon, { Butt, Pinata } from "@/components/Icon";
-import Improve from "@/components/Improve";
-import Invite from "@/components/Invite";
-import Modal from "@/components/Modal";
-import { Fireworks } from "fireworks-js";
-
+import {
+  Airdrop,
+  Butt,
+  Claim,
+  Icon,
+  Improve,
+  Invite,
+  Modal,
+  Pinata,
+} from "@/components";
 import {
   TonConnectButton,
   useTonAddress,
   useTonConnectUI,
 } from "@tonconnect/ui-react";
+import { Fireworks } from "fireworks-js";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -23,12 +27,11 @@ import {
 } from "react-icons/gi";
 import { HiArrowLeft } from "react-icons/hi2";
 import useSWR from "swr";
-import Claim from "../Claim";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 type SlapTextType = { id: number; xPos: string }[];
-type StatsType = { count: number }[];
+type TapsType = { count: number; waitFrom: number }[];
 type SessionType = {
   count: number;
   max: number;
@@ -37,7 +40,7 @@ type SessionType = {
 }[];
 
 interface DataType {
-  stats: StatsType;
+  taps: TapsType;
   session: SessionType;
   improvement: number[];
 }
@@ -56,7 +59,7 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
     fetcher
   );
   const [session, setSession] = useState<SessionType>([]);
-  const [stats, setStats] = useState<StatsType>([]);
+  const [taps, setTaps] = useState<TapsType>([]);
   const [slapText, setSlapText] = useState<SlapTextType>([]);
   const [sessionPendings, setSessionPendings] = useState<number[]>([]);
 
@@ -132,7 +135,7 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
       s.percent >= 100 ? timestamp - s.waitFrom : 0
     );
     setSessionPendings(sp);
-    setStats(data.stats);
+    setTaps(data.taps);
     setSession(data.session);
   }, [data]);
 
@@ -177,7 +180,6 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
       setSecretActive(timestamp + 10_000);
       setActiveBg(`bg-custom-radial`);
 
-      console.log("containerRef.current", !!containerRef.current);
       if (containerRef.current) {
         const fireworks = new Fireworks(containerRef.current, options);
         fireworks.start();
@@ -225,8 +227,6 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
     return `rgb(${red}, ${green}, 0)`;
   };
 
-  console.log(secretActive);
-
   return (
     <>
       {!data ? (
@@ -271,7 +271,7 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
               <div className="w-60 h-60 bg-gradient-to-r relative">
                 <Icon
                   handleClick={handleClick}
-                  stats={data?.stats}
+                  taps={data?.taps}
                   session={data?.session}
                 >
                   {gameId === "1" ? (
@@ -302,8 +302,8 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
 
             <div className="w-full p-4 flex justify-around">
               <div className="w-full m-4 p-4 text-white rounded-xl backdrop-blur-2xl backdrop-saturate-200 shadow-blur flex justify-between gap-2">
-                {stats &&
-                  stats.map((slap, i) => {
+                {taps &&
+                  taps.map((tap, i) => {
                     return (
                       <div
                         key={i}
@@ -317,9 +317,9 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
                             backgroundColor: getColor(session[i].percent),
                           }}
                         >
-                          {slap && slap.count ? (
+                          {tap && tap.count ? (
                             session[i].percent > 45 ? (
-                              slap.count
+                              tap.count
                             ) : (
                               <>&nbsp;</>
                             )
@@ -328,9 +328,9 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
                           )}
                         </div>
                         <div className="w-full rounded-xl bg-slate-800 p-2 text-center font-extrabold">
-                          {slap && slap.count ? (
+                          {tap && tap.count ? (
                             session[i].percent <= 45 ? (
-                              slap.count
+                              tap.count
                             ) : (
                               <>&nbsp;</>
                             )
@@ -346,24 +346,24 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
 
             <div className="w-full p-4 flex justify-around">
               <button
-                className="text-white font-bold py-4 px-8 text-xl border border-blue-900/10 hover:border-blue-900/40 rounded-2xl grid place-items-center gap-2"
+                className="text-white font-bold py-3 px-6 text-lg border border-blue-900/10 hover:border-blue-900/40 rounded-2xl grid place-items-center gap-2"
                 onClick={() => setImproveOpen(true)}
               >
-                <GiCutDiamond className="text-3xl" />
+                <GiCutDiamond className="text-2xl" />
                 <div>Improve</div>
               </button>
               <button
-                className="text-white font-bold py-4 px-8 text-xl border border-blue-900/10 hover:border-blue-900/40 rounded-2xl grid place-items-center gap-2"
+                className="text-white font-bold py-3 px-6 text-lg border border-blue-900/10 hover:border-blue-900/40 rounded-2xl grid place-items-center gap-2"
                 onClick={() => setAirdropOpen(true)}
               >
-                <GiDroplets className="text-3xl" />
+                <GiDroplets className="text-2xl" />
                 <div>Airdrop</div>
               </button>
               <button
-                className="text-white font-bold py-4 px-8 text-xl border border-blue-900/10 hover:border-blue-900/40 rounded-2xl grid place-items-center gap-2"
+                className="text-white font-bold py-3 px-6 text-lg border border-blue-900/10 hover:border-blue-900/40 rounded-2xl grid place-items-center gap-2"
                 onClick={() => setInviteOpen(true)}
               >
-                <GiThreeFriends className="text-3xl" />
+                <GiThreeFriends className="text-2xl" />
                 <div>Invite</div>
               </button>
             </div>

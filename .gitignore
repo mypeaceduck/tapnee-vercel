@@ -35,6 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-tapnee.db
-
 pnpm-lock.yaml
+*.db

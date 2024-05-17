@@ -7,21 +7,20 @@ interface Position {
 
 interface IconType {
   handleClick?: (id: number) => Promise<void>;
-  stats?: { count: number }[];
+  taps?: { count: number }[];
   session?: { count: number; percent: number }[];
   children: any;
 }
 
-const Icon = ({ handleClick, stats, session, children }: IconType) => {
+const Icon = ({ handleClick, taps, session, children }: IconType) => {
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
   const [clickable, setClickable] = useState(true);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      const moveX =
-        (event.clientX - window.innerWidth / 2) / (stats ? 10 : 100);
+      const moveX = (event.clientX - window.innerWidth / 2) / (taps ? 10 : 100);
       const moveY =
-        (event.clientY - window.innerHeight / 2) / (stats ? 10 : 100);
+        (event.clientY - window.innerHeight / 2) / (taps ? 10 : 100);
       setPosition({ x: moveX, y: moveY });
     };
 
@@ -30,7 +29,7 @@ const Icon = ({ handleClick, stats, session, children }: IconType) => {
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [stats]);
+  }, [taps]);
 
   useEffect(() => {
     session?.forEach((s, i) => {
@@ -57,7 +56,7 @@ const Icon = ({ handleClick, stats, session, children }: IconType) => {
 
   const handle = useCallback(
     async (event: MouseEvent) => {
-      if (!clickable || !stats) return;
+      if (!clickable || !taps) return;
 
       const timeout = 200;
 
@@ -89,24 +88,24 @@ const Icon = ({ handleClick, stats, session, children }: IconType) => {
       }
       if (handleClick) await handleClick(id);
     },
-    [stats, session, clickable, handleClick]
+    [taps, session, clickable, handleClick]
   );
 
   useEffect(() => {
-    if (!stats) return;
+    if (!taps) return;
 
-    stats.forEach((_, i) => {
+    taps.forEach((_, i) => {
       const element = document.getElementById(`slap-area-${i + 1}`);
       if (element) element.addEventListener("click", handle);
     });
 
     return () => {
-      stats.forEach((_, i) => {
+      taps.forEach((_, i) => {
         const element = document.getElementById(`slap-area-${i + 1}`);
         if (element) element.removeEventListener("click", handle);
       });
     };
-  }, [stats, handle]);
+  }, [taps, handle]);
 
   return (
     <div style={{ transform: `translate(${position.x}px, ${position.y}px)` }}>

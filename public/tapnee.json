@@ -1,8 +1,0 @@
-{
-  "name": "SLAP",
-  "iconUrl": "https://tapnee-v0.vercel.app/favicon.ico",
-  "termsOfUseUrl": "<terms-of-use-url>",
-  "privacyPolicyUrl": "<privacy-policy-url>",
-  "iconSvg": "<svg></svg>",
-  "secretCombinations": ["11212", "21212211"]
-}
