@@ -36,17 +36,21 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
+  const now = new Date();
+  const oneDayAgo = new Date(now);
+  oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+
   const improvementsResult = await query<Improvement>(
-    "SELECT improvement FROM improvements WHERE gameId = $1 AND userId = $2 AND createdAt + 86400000 < $3",
-    [gameId, userId, Date.now()]
+    "SELECT improvement FROM improvements WHERE gameId = $1 AND userId = $2 AND createdAt < $3",
+    [gameId, userId, oneDayAgo.toISOString()]
   );
   const improvements = improvementsResult.rows.map((i) => i.improvement);
 
   const tapsResults = await Promise.all(
     Array.from({ length: gameAreas.areas }, (_, i) =>
       query<TapRecord>(
-        "SELECT COUNT(*) AS taps, MIN(createdAt) AS waitFrom FROM taps WHERE gameId = $1 AND userId = $2 AND areaId = $3 AND createdAt > $4",
-        [gameId, userId, i + 1, Date.now() - 60000]
+        "SELECT COUNT(*) AS taps, MIN(createdAt) AS waitFrom FROM taps WHERE gameId = $1 AND userId = $2 AND areaId = $3 AND createdAt > NOW() - INTERVAL '1 minute'",
+        [gameId, userId, i + 1]
       )
     )
   );
