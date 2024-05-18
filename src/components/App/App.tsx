@@ -54,7 +54,13 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
   const [isConfettiActive, setIsConfettiActive] = useState(false);
   const [isParticlesActive, setIsParticlesActive] = useState(false);
 
-  const { data, mutate }: { data: DataType; mutate: () => void } = useSWR(
+  const {
+    data,
+    mutate,
+  }: {
+    data: DataType;
+    mutate: (data?: DataType, shouldRevalidate?: boolean) => void;
+  } = useSWR(
     `/api?gameId=${gameId}&userId=${userId}&address=${address}`,
     fetcher
   );
@@ -121,7 +127,8 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
   }, [gameId, address]);
 
   useEffect(() => {
-    setInterval(() => mutate(), 10000);
+    const intervalId = setInterval(() => mutate(), 10000);
+    return () => clearInterval(intervalId);
   }, [mutate]);
 
   useEffect(() => {
@@ -148,21 +155,34 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
     };
     setSlapText((slaps) => [...slaps, newSlap]);
 
+    // Optimistically update the session state
+    const optimisticSession = session.map((s, i) =>
+      i === areaId - 1 ? { ...s, count: s.count + 1 } : s
+    );
+    setSession(optimisticSession);
+
     setTimeout(() => {
       setSlapText((currentSlaps) =>
         currentSlaps.filter((slap) => slap.id !== newSlap.id)
       );
     }, 3000);
 
-    await fetch("/api", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ gameId, userId, areaId, address }),
-    });
+    try {
+      await fetch("/api", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ gameId, userId, areaId, address }),
+      });
 
-    mutate();
+      // Revalidate the data after a successful API call
+      mutate();
+    } catch (error) {
+      console.error("Failed to send click:", error);
+      // Revert the session state if the API call fails
+      setSession(session);
+    }
   };
 
   useEffect(() => {
@@ -344,7 +364,7 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
               </div>
             </div>
 
-            <div className="w-full p-4 flex justify-around">
+            <div className="w-full p-2 flex justify-around mb-20">
               <button
                 className="text-white font-bold py-3 px-6 text-lg border border-blue-900/10 hover:border-blue-900/40 rounded-2xl grid place-items-center gap-2"
                 onClick={() => setImproveOpen(true)}
