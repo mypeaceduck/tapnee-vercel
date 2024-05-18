@@ -289,11 +289,7 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
 
             <div className="flex-grow flex items-center justify-center gap-12">
               <div className="w-60 h-60 bg-gradient-to-r relative">
-                <Icon
-                  handleClick={handleClick}
-                  taps={data?.taps}
-                  session={data?.session}
-                >
+                <Icon handleClick={handleClick} taps={taps} session={session}>
                   {gameId === "1" ? (
                     <div className="fill-pink-400">
                       <Pinata />
@@ -364,7 +360,7 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
               </div>
             </div>
 
-            <div className="w-full p-2 flex justify-around mb-20">
+            <div className="w-full p-2 flex justify-around mb-10">
               <button
                 className="text-white font-bold py-3 px-6 text-lg border border-blue-900/10 hover:border-blue-900/40 rounded-2xl grid place-items-center gap-2"
                 onClick={() => setImproveOpen(true)}
