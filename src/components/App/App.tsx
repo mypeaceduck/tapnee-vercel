@@ -161,6 +161,11 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
     );
     setSession(optimisticSession);
 
+    const optimisticTaps = taps.map((s, i) =>
+      i === areaId - 1 ? { ...s, count: s.count + 1 } : s
+    );
+    setTaps(optimisticTaps);
+
     setTimeout(() => {
       setSlapText((currentSlaps) =>
         currentSlaps.filter((slap) => slap.id !== newSlap.id)
