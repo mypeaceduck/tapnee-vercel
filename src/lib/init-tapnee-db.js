@@ -59,7 +59,7 @@ async function setup() {
       );
     `);
 
-    await db.run("INSERT INTO users (address) VALUES ('0Q0')");
+    await client.query("INSERT INTO users (address) VALUES ('0Q0')");
     await client.query(
       "INSERT INTO games (userId, name, areas, metadata) VALUES (1, 'PINATA', 1, '{}')"
     );
