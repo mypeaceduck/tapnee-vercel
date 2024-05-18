@@ -114,11 +114,11 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ auth: address }),
+        body: JSON.stringify({ gameId, address }),
       });
     };
     add();
-  }, [address]);
+  }, [gameId, address]);
 
   useEffect(() => {
     setInterval(() => mutate(), 10000);
@@ -252,7 +252,7 @@ export default function App({ gameId, userId }: { gameId: any; userId: any }) {
                   <HiArrowLeft /> HOME
                 </Link>
               </div>
-              <div className="absolute inset-x-0 top-4 flex justify-center">
+              <div className="inset-x-0 top-4 flex justify-center">
                 <button
                   className="text-white font-bold py-2 px-4 text-lg border border-blue-900/10 hover:border-blue-900/40 rounded-2xl grid place-items-center gap-2"
                   onClick={() => setClaimOpen(true)}

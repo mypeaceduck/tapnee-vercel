@@ -40,7 +40,7 @@ export default function Page() {
               <Logo opacity={0.01} />
             </div>
           </div>
-          <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-28">
+          <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-20">
             {games.map((game: any) => (
               <div key={game.id} className="w-full">
                 <Link

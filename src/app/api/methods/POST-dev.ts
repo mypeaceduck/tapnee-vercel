@@ -16,27 +16,33 @@ async function openDb() {
 
 export async function POST(request: NextRequest) {
   const data = await request.json();
-  const { gameId, areaId, address, auth } = data;
+  const { gameId, areaId, address } = data;
   let userId = data.userId;
 
   const db = await openDb();
 
-  const userIdByAddress = await db.get(
-    "SELECT id FROM users WHERE address = ?",
-    [address || ""]
-  );
-  userId = userIdByAddress ? userIdByAddress.id : "";
+  const userIdByAddress = address
+    ? await db.get("SELECT id FROM users WHERE address = ?", [address])
+    : null;
+  userId = userIdByAddress?.id ?? userId;
 
-  if (auth && !userId) {
+  if (address && !userId) {
     const userInsertResult = await db.run(
       "INSERT INTO users (address) VALUES (?)",
-      [auth]
+      [address]
     );
-    userId = userInsertResult.lastID;
+    return NextResponse.json(
+      { message: "New User Id", userId: userInsertResult.lastID },
+      { status: 200 }
+    );
   }
 
   if (!userId) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  if (!areaId) {
+    return NextResponse.json({ error: "Click not found" }, { status: 404 });
   }
 
   const timestamp = Date.now();
@@ -52,7 +58,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Click too soon" }, { status: 429 });
   }
 
-  // Fetch improvements and apply click limits
   const improvementsResult = await db.all(
     "SELECT improvement FROM improvements WHERE gameId = ? AND userId = ? AND strftime('%s', createdAt) < ?",
     [gameId, userId, timestamp / 1000 - 86400]
@@ -69,7 +74,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Click limit reached" }, { status: 429 });
   }
 
-  // Insert a new tap
   await db.run("INSERT INTO taps (gameId, userId, areaId) VALUES (?, ?, ?)", [
     gameId,
     userId,

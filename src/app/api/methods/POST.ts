@@ -8,31 +8,35 @@ const MAX_PER_MIN = 30; // Max 30 taps per minute
 
 export async function POST(request: NextRequest) {
   const data = (await request.json()) as TapInput;
-  const { gameId, areaId, address, auth } = data;
+  const { gameId, areaId, address } = data;
   let userId = data.userId;
 
-  const userIdByAddress = await query<User>(
-    "SELECT id FROM users WHERE address = $1",
-    [address || ""]
-  );
-  userId = userIdByAddress.rows.length > 0 ? userIdByAddress.rows[0].id : "";
+  const userIdByAddress = address
+    ? await query<User>("SELECT id FROM users WHERE address = $1", [address])
+    : null;
+  userId = userIdByAddress?.rows?.[0]?.id ?? userId;
 
-  if (auth && !userId) {
-    const timestamp = Date.now();
+  if (address && !userId) {
     const userInsertResult = await query<{ id: string }>(
-      "INSERT INTO users (address, createdAt) VALUES ($1, $2) RETURNING id",
-      [address, timestamp]
+      "INSERT INTO users (address) VALUES ($1) RETURNING id",
+      [address]
     );
-    userId = userInsertResult.rows[0].id;
+    return NextResponse.json(
+      { message: "New User Id", userId: userInsertResult.rows[0].id },
+      { status: 200 }
+    );
   }
 
   if (!userId) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
+  if (!areaId) {
+    return NextResponse.json({ error: "Click not found" }, { status: 404 });
+  }
+
   const timestamp = Date.now();
 
-  // Throttling logic to prevent too frequent taps
   const lastEntryResult = await query<{ lastTimestamp: number }>(
     "SELECT MAX(createdAt) as lastTimestamp FROM taps WHERE gameId = $1 AND userId = $2 AND areaId = $3",
     [gameId, userId, areaId]
